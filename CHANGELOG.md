@@ -1,5 +1,17 @@
 # Historial de A
 
+## Beta de presentación 1.1 — 2 de noviembre de 2026
+
+- Edición completa de partidos desde el perfil Administrador.
+- Reprogramación de fecha, hora y cancha con revisión previa de cambios.
+- Validación de disponibilidad, cruces, traslados y panel arbitral al modificar un nombramiento.
+- Solicitud de nueva confirmación y liberación de puestos incompatibles.
+- Eliminación recuperable en Partidos → Eliminados y restauración con validación.
+- Historial por partido y avisos de cambios en el perfil del árbitro.
+- Conservación de cobros y pagos registrados, incluso en partidos eliminados o pendientes de nueva confirmación.
+- Protección contra reasignación de un pago a otra persona y contra aplicación de revisiones desactualizadas.
+- 48 comprobaciones automáticas en total.
+
 ## Beta de presentación 1.0 — 2 de noviembre de 2026
 
 - Nueva sección Calendario con vista mensual, agenda diaria y filtros para partidos y eventos.

@@ -1,3 +1,4 @@
+import {liveMatches} from './domain.mjs';
 // Calendar times use Costa Rica (UTC-06:00), independently of the device timezone.
 export const eventStart=e=>new Date(`${e.date}T${e.time}:00-06:00`);
 export const eventEnd=e=>new Date(eventStart(e).getTime()+Number(e.duration)*60000);
@@ -7,7 +8,7 @@ export function monthDays(month){
  return Array.from({length:42},(_,i)=>new Date(first.getTime()+(i-offset)*86400000).toISOString().slice(0,10));
 }
 export function agendaItems(db,date,type='all'){
- const matches=type==='events'?[]:db.matches.filter(m=>m.date===date).map(m=>({kind:'match',id:m.id,date:m.date,time:m.time,title:`${m.home} vs ${m.away}`,venue:m.venue,duration:m.duration}));
+ const matches=type==='events'?[]:liveMatches(db).filter(m=>m.date===date).map(m=>({kind:'match',id:m.id,date:m.date,time:m.time,title:`${m.home} vs ${m.away}`,venue:m.venue,duration:m.duration}));
  const events=type==='matches'?[]:(db.calendarEvents||[]).filter(e=>e.date===date).map(e=>({...e,kind:'event'}));
  return [...matches,...events].sort((a,b)=>a.time.localeCompare(b.time)||a.title.localeCompare(b.title));
 }

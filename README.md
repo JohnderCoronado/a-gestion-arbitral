@@ -1,4 +1,4 @@
-# A · Beta de presentación 1.0
+# A · Beta de presentación 1.1
 
 Demostración pública para presentar el flujo de una asociación arbitral. Nombres, correos, torneos, partidos y montos son ficticios. No representa ni está afiliada a una asociación, liga o federación real.
 
@@ -7,6 +7,21 @@ Demostración pública para presentar el flujo de una asociación arbitral. Nomb
 **Repositorio privado:** https://github.com/JohnderCoronado/a-gestion-arbitral
 
 Se puede compartir el enlace sin iniciar sesión. Cada navegador mantiene su propia copia de los datos de demostración.
+
+## Modificar, reprogramar y eliminar partidos
+
+- Cada partido tiene las opciones Editar, Reprogramar y Eliminar, disponibles en el perfil Administrador y en el detalle de su equipo arbitral.
+- Editar permite cambiar torneo, equipos, fecha, hora, duración, cancha, coordenadas, cantidad de árbitros, cobro y honorarios por puesto.
+- Reprogramar ofrece un formulario breve para cambiar fecha, hora o cancha y registrar un motivo opcional.
+- Antes de guardar se presenta una revisión con los valores anteriores y nuevos, los árbitros que deben confirmar de nuevo y los puestos que quedarán libres por falta de disponibilidad, cruces o cambios de panel.
+- Una modificación exclusivamente del cobro no afecta las confirmaciones. Un cambio de honorarios afecta la confirmación del árbitro correspondiente.
+- Los importes ya cobrados o pagados se conservan. Para corregir esos importes o retirar un puesto pagado debe revertirse primero el registro económico en Cobros y pagos.
+- Si un árbitro pagado no puede conservar un nombramiento tras un cambio, la modificación se bloquea hasta que se resuelva ese registro; el pago no se transfiere a otra persona.
+- Eliminar retira el partido de la programación, el calendario y los nombramientos activos, y libera los horarios reservados. Los cobros y pagos registrados permanecen en el registro económico.
+- Partidos → Eliminados permite recuperar un partido. La restauración vuelve a revisar disponibilidad y exige nueva confirmación de los nombramientos que puedan mantenerse.
+- El detalle de cada partido contiene un historial de ediciones, reprogramaciones, eliminaciones y restauraciones. Los perfiles de árbitro muestran los datos nuevos, las solicitudes de nueva confirmación y los cambios que liberaron su nombramiento.
+
+Estas funciones operan sobre los datos locales de esta demostración; los cambios no envían mensajes ni se sincronizan entre dispositivos.
 
 ## Calendario y navegación del resumen
 
@@ -53,7 +68,7 @@ El selector de perfiles simula los papeles de administrador y árbitro. No hay a
 
 Los datos se guardan en localStorage de cada navegador. No se sincronizan entre dispositivos ni entre usuarios. No hay base de datos compartida, respaldos externos, correos automáticos, transferencias bancarias ni facturación electrónica. No ingresar información real de clientes en esta demostración.
 
-El portal de organizadores, la administración de jugadores y las sanciones quedan fuera de esta versión. La beta tampoco implementa reprogramaciones, cancelaciones de partidos confirmados o liquidaciones contables definitivas.
+El portal de organizadores, la administración de jugadores y las sanciones quedan fuera de esta versión. La beta permite reprogramar y eliminar partidos de forma recuperable; no implementa liquidaciones contables definitivas ni transferencias bancarias.
 
 Para un piloto operativo: definir reglas con la asociación, implementar cuentas reales y permisos de servidor, base de datos compartida, respaldos y restauración, registro de cambios, recuperación de acceso, notificaciones y pruebas independientes de seguridad.
 
@@ -81,19 +96,21 @@ node check-domain.mjs
 
 También puede ejecutar `npm run check` (o `node --run check` con una versión compatible de Node.js) para comprobar la sintaxis y todas las reglas.
 
-Se incluyen 25 comprobaciones: 12 de nombramientos y honorarios, y 13 de calendario, fechas, zona horaria, avisos y exportación .ics. Para ejecutar solo las de calendario: `node check-calendar.mjs`.
+Se incluyen 48 comprobaciones: 12 de nombramientos y honorarios, 13 de calendario y avisos, y 23 de edición, reprogramación, eliminación, restauración y conservación de movimientos económicos. Para ejecutar solo las de calendario: `node check-calendar.mjs`. Para las de gestión de partidos: `node check-matches.mjs`.
 
 ### Estructura
 
 - `dist/index.html`: página de entrada.
 - `dist/app.mjs`: pantallas y recorridos de la demostración.
 - `dist/domain.mjs`: reglas de nombramientos y cuentas.
+- `dist/match-management.mjs`: validación, revisión y aplicación de cambios de partidos, eliminación recuperable e historial.
 - `dist/calendar.mjs`: agenda, validación de eventos, cálculo de avisos y exportación .ics.
 - `dist/demo-labels.mjs`: actualización de nombres ficticios antiguos.
 - `dist/styles.css`: diseño adaptable a computadora y celular.
 - `dist/favicon.svg`: icono A.
 - `check-domain.mjs`: comprobaciones de nombramientos y honorarios.
 - `check-calendar.mjs`: comprobaciones del calendario y los avisos.
+- `check-matches.mjs`: comprobaciones de edición, reprogramación, eliminación y restauración.
 - `CHANGELOG.md`: cambios de la beta de presentación.
 - `.openai/hosting.json`: asociación con el alojamiento actual; no contiene credenciales.
 
