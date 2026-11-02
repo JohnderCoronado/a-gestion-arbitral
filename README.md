@@ -1,4 +1,4 @@
-# A · Beta de demostración
+# A · Beta de presentación 1.0
 
 Demostración pública para presentar el flujo de una asociación arbitral. Nombres, correos, torneos, partidos y montos son ficticios. No representa ni está afiliada a una asociación, liga o federación real.
 
@@ -7,6 +7,18 @@ Demostración pública para presentar el flujo de una asociación arbitral. Nomb
 **Repositorio privado:** https://github.com/JohnderCoronado/a-gestion-arbitral
 
 Se puede compartir el enlace sin iniciar sesión. Cada navegador mantiene su propia copia de los datos de demostración.
+
+## Calendario y navegación del resumen
+
+- El menú separa Partidos (lista de partidos y filtros) de Calendario (vista mensual y agenda diaria).
+- El calendario muestra automáticamente todos los partidos registrados y permite consultar sus nombramientos desde cada actividad.
+- Los administradores pueden crear y editar reuniones, capacitaciones y otros eventos, o marcarlos como cancelados.
+- Cada evento incluye fecha, hora de Costa Rica, duración, lugar, notas y aviso opcional al comenzar o 1, 2, 3 o 7 días antes.
+- Los avisos pendientes aparecen en el resumen, la campana superior y la sección Recordatorios; se pueden marcar como vistos.
+- La beta no envía notificaciones cuando está cerrada. La opción Exportar a calendario descarga un archivo .ics con alarma. Debe importarse en una aplicación de calendario, que será responsable de entregar la notificación. Si edita o cancela el evento después de exportarlo, actualícelo también en ese calendario; la exportación no es una sincronización automática.
+- Las tarjetas del resumen abren sus listas: partidos de la semana, equipos arbitrales completos, invitaciones pendientes y árbitros disponibles.
+- También se puede navegar desde las tarjetas de honorarios y disponibilidad del árbitro y desde los totales de cobros y pagos.
+- Los datos existentes del navegador se conservan al agregar el calendario. Se añade una reunión ficticia de ejemplo una sola vez.
 
 ## Recorrido sugerido
 
@@ -17,7 +29,10 @@ Se puede compartir el enlace sin iniciar sesión. Cada navegador mantiene su pro
 5. En Mi disponibilidad, marque días y rangos horarios. Guarde la semana.
 6. Vuelva al Administrador. Cree un torneo, seleccione su panel y registre un partido.
 7. En Cobros y pagos, marque un cobro o un pago de ejemplo. El árbitro verá el pago en Mis pagos.
-8. Exporte el registro a CSV si desea revisarlo en una hoja de cálculo.
+8. Abra Calendario. Seleccione un día, consulte sus partidos y cree un evento con aviso de dos días.
+9. Abra ese evento y use Exportar a calendario para descargarlo con su alarma.
+10. Regrese al resumen y pruebe las cuatro tarjetas; cada una abre su lista correspondiente.
+11. Exporte el registro de cobros a CSV si desea revisarlo en una hoja de cálculo.
 
 El botón Restablecer demostración devuelve los datos iniciales. En celular aparece como un icono de flecha circular junto a la marca.
 
@@ -64,17 +79,22 @@ Con Node.js instalado:
 node check-domain.mjs
 ```
 
-También puede ejecutar `npm run check` para comprobar la sintaxis y las reglas. Se incluyen 12 comprobaciones de disponibilidad, pertenencia a torneos, cruces, traslados, aceptación, rechazo y cálculo de honorarios.
+También puede ejecutar `npm run check` (o `node --run check` con una versión compatible de Node.js) para comprobar la sintaxis y todas las reglas.
+
+Se incluyen 25 comprobaciones: 12 de nombramientos y honorarios, y 13 de calendario, fechas, zona horaria, avisos y exportación .ics. Para ejecutar solo las de calendario: `node check-calendar.mjs`.
 
 ### Estructura
 
 - `dist/index.html`: página de entrada.
 - `dist/app.mjs`: pantallas y recorridos de la demostración.
 - `dist/domain.mjs`: reglas de nombramientos y cuentas.
+- `dist/calendar.mjs`: agenda, validación de eventos, cálculo de avisos y exportación .ics.
 - `dist/demo-labels.mjs`: actualización de nombres ficticios antiguos.
 - `dist/styles.css`: diseño adaptable a computadora y celular.
 - `dist/favicon.svg`: icono A.
-- `check-domain.mjs`: comprobaciones de las reglas.
+- `check-domain.mjs`: comprobaciones de nombramientos y honorarios.
+- `check-calendar.mjs`: comprobaciones del calendario y los avisos.
+- `CHANGELOG.md`: cambios de la beta de presentación.
 - `.openai/hosting.json`: asociación con el alojamiento actual; no contiene credenciales.
 
 Los archivos de `dist/` son el código editable de esta beta y deben guardarse en Git. No hay paso de compilación. El repositorio guarda el código; los cambios locales de los visitantes permanecen en sus respectivos navegadores.

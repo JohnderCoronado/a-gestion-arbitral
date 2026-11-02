@@ -1,10 +1,10 @@
 {
   "name": "a-gestion-arbitral",
-  "version": "0.1.0",
+  "version": "1.0.0-beta.1",
   "private": true,
   "description": "Beta de demostración para gestión de asociaciones arbitrales",
   "type": "module",
   "scripts": {
-    "check": "node --check dist/app.mjs && node --check dist/domain.mjs && node --check dist/demo-labels.mjs && node check-domain.mjs"
+    "check": "node --check dist/app.mjs && node --check dist/domain.mjs && node --check dist/demo-labels.mjs && node --check dist/calendar.mjs && node check-domain.mjs && node check-calendar.mjs"
   }
 }

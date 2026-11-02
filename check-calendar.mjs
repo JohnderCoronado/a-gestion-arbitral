@@ -1,0 +1,18 @@
+import assert from 'node:assert/strict';
+import {monthDays,agendaItems,dueReminders,validateCalendarEvent,calendarICS,eventStart,eventEnd} from './dist/calendar.mjs';
+let checks=0;const test=(name,fn)=>{fn();checks++;console.log('PASS '+name)};
+const event=(extra={})=>({id:'event-1',title:'Reunión de coordinación',category:'Reunión',date:'2026-11-07',time:'18:00',duration:60,venue:'Sala Central',notes:'Revisar la jornada.',reminderDays:2,reminderSeen:false,status:'scheduled',sequence:0,...extra});
+test('month grid starts on Monday and covers boundary days',()=>{const days=monthDays('2026-11');assert.equal(days.length,42);assert.equal(days[0],'2026-10-26');assert.equal(days[41],'2026-12-06');assert.equal(days.filter(d=>d.startsWith('2026-11')).length,30)});
+test('leap-year calendar includes February 29',()=>assert.ok(monthDays('2028-02').includes('2028-02-29')));
+test('agenda combines and sorts matches and custom events',()=>{const db={matches:[{id:'m',date:'2026-11-07',time:'20:00',home:'A',away:'B'}],calendarEvents:[event()]};assert.deepEqual(agendaItems(db,'2026-11-07').map(x=>x.kind),['event','match']);assert.equal(agendaItems(db,'2026-11-07','events').length,1);assert.equal(agendaItems(db,'2026-11-07','matches').length,1)});
+test('Costa Rica event time is independent of host timezone',()=>{assert.equal(eventStart(event()).toISOString(),'2026-11-08T00:00:00.000Z');assert.equal(eventEnd(event()).toISOString(),'2026-11-08T01:00:00.000Z')});
+test('two-day reminder activates exactly 48 hours before',()=>{assert.equal(dueReminders([event()],new Date('2026-11-05T23:59:59Z')).length,0);assert.equal(dueReminders([event()],new Date('2026-11-06T00:00:00Z')).length,1)});
+test('reminder expires when event ends',()=>assert.equal(dueReminders([event()],new Date('2026-11-08T01:00:00Z')).length,0));
+test('seen, cancelled and disabled reminders stay hidden',()=>{const now=new Date('2026-11-07T12:00:00Z');for(const extra of [{reminderSeen:true},{status:'cancelled'},{reminderDays:null}])assert.equal(dueReminders([event(extra)],now).length,0)});
+test('zero-day reminder activates at the event start',()=>{assert.equal(dueReminders([event({reminderDays:0})],new Date('2026-11-07T23:59:59Z')).length,0);assert.equal(dueReminders([event({reminderDays:0})],new Date('2026-11-08T00:00:00Z')).length,1)});
+test('calendar rejects invalid dates, times and past-midnight blocks',()=>{for(const extra of [{date:'2026-02-30'},{time:'25:00'},{time:'23:00',duration:90},{reminderDays:9},{title:' '},{duration:0}])assert.throws(()=>validateCalendarEvent(event(extra)))});
+test('evening events are accepted across the UTC date boundary',()=>assert.equal(validateCalendarEvent(event()).title,'Reunión de coordinación'));
+test('ICS export includes UTC times and two-day alarm',()=>{const ics=calendarICS([event()],new Date('2026-11-02T12:00:00Z'));assert.ok(ics.includes('DTSTART:20261108T000000Z\r\n'));assert.ok(ics.includes('DTEND:20261108T010000Z\r\n'));assert.ok(ics.includes('TRIGGER:-P2D\r\n'));assert.ok(ics.includes('UID:event-1@a-gestion-arbitral.demo'));assert.ok(ics.endsWith('END:VCALENDAR\r\n'))});
+test('ICS escapes user content and folds long UTF-8 lines',()=>{const ics=calendarICS([event({title:'Reunión, sesión; próxima\\nueva\nAgenda',notes:'á'.repeat(200)})]);assert.ok(ics.includes('SUMMARY:Reunión\\, sesión\\; próxima\\\\nueva\\nAgenda'));for(const line of ics.split('\r\n'))assert.ok(Buffer.byteLength(line,'utf8')<=75)});
+test('ICS omits alarms for disabled or cancelled reminders',()=>{for(const extra of [{reminderDays:null},{status:'cancelled'}])assert.equal(calendarICS([event(extra)]).includes('BEGIN:VALARM'),false)});
+console.log(`${checks} calendar checks passed`);
