@@ -1,0 +1,14 @@
+# Keep the application in dist/ tracked: it is the editable source for this beta.
+node_modules/
+.env
+.env.*
+!.env.example
+.sites-runtime/
+.sites-checkout/
+.sites-checkout-*/
+.openai/local/
+*.log
+*.tar.gz
+*.zip
+.DS_Store
+Thumbs.db
