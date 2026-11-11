@@ -1,5 +1,14 @@
 # Historial de A
 
+## Beta de presentación 1.2 — 10 de noviembre de 2026
+
+- Correo de informes por torneo y acceso desde cada nombramiento confirmado.
+- Formulario de informe con datos del partido precargados, marcador, goleadores, tarjetas, incidentes, observaciones y penales.
+- Borradores persistentes, revisión, PDF descargable y entrega simulada con destinatario del torneo.
+- Historial de copias por versión y revisión de datos tras cambios del partido.
+- Consulta de informes por administradores, central y asistentes según el perfil simulado.
+- 65 comprobaciones automáticas en total.
+
 ## Beta de presentación 1.1 — 2 de noviembre de 2026
 
 - Edición completa de partidos desde el perfil Administrador.

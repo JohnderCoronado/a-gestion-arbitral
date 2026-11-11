@@ -1,4 +1,4 @@
-# A · Beta de presentación 1.1
+# A · Beta de presentación 1.2
 
 Demostración pública para presentar el flujo de una asociación arbitral. Nombres, correos, torneos, partidos y montos son ficticios. No representa ni está afiliada a una asociación, liga o federación real.
 
@@ -7,6 +7,29 @@ Demostración pública para presentar el flujo de una asociación arbitral. Nomb
 **Repositorio privado:** https://github.com/JohnderCoronado/a-gestion-arbitral
 
 Se puede compartir el enlace sin iniciar sesión. Cada navegador mantiene su propia copia de los datos de demostración.
+
+## Informes arbitrales
+
+- En Torneos → Editar torneo, el administrador registra el correo para recibir informes del campeonato. El campo es opcional al crear el torneo y se exige para simular una entrega.
+- Cada nombramiento confirmado ofrece Informe arbitral. El central confirmado y el administrador pueden completar el formulario. Los asistentes confirmados consultan el informe.
+- La sección Informes de administración y Mis informes del árbitro reúnen los partidos accesibles y sus estados.
+- El torneo, la categoría, los equipos, la cancha, la fecha, la hora y los árbitros confirmados se precargan desde el partido.
+- El formulario guarda marcador, delegado y fecha límite opcionales, goleadores, amarillas, rojas directas, expulsiones por doble amarilla, incidentes, observaciones y penales durante el partido. Los minutos y dorsales son opcionales.
+- Guardar borrador permite continuar después. Guardar y revisar abre el documento para comprobar sus datos y el destinatario del torneo.
+- Descargar PDF genera un archivo local con los datos guardados. Los textos extensos continúan en páginas nuevas.
+- Simular entrega requiere marcador completo, destinatario válido y revisión de los datos del partido. Si se ingresan goleadores, su lista debe coincidir con el resultado.
+- Cada entrega simulada conserva una copia de la versión, el destinatario y la fecha. El historial permite consultar y descargar copias anteriores tras editar el borrador.
+- Una reprogramación o un cambio de equipos, torneo, cancha o cuerpo arbitral exige revisar y guardar los datos actuales antes de simular otra entrega. Los informes de partidos eliminados se conservan para consulta.
+- Los envíos se simulan dentro del navegador. Para entregar correos automáticos en un piloto se necesita conectar un servicio de correo desde un servidor, con cuentas reales y confirmación del resultado del envío.
+- Los perfiles son simulados. Las reglas de edición de esta beta se aplican en el navegador.
+
+### Recorrido de los informes
+
+1. Como Administrador, abra Torneos, edite un torneo y registre un correo ficticio como informes@ejemplo.invalid.
+2. Cambie al perfil de un central con nombramiento confirmado y abra Informe arbitral desde su partido.
+3. Complete el marcador y los datos que correspondan. Guarde y revise el informe.
+4. Descargue el PDF y pruebe Simular entrega.
+5. Vuelva al informe actual para consultar el historial de copias. Una edición posterior conserva esas copias.
 
 ## Modificar, reprogramar y eliminar partidos
 
@@ -68,7 +91,7 @@ El selector de perfiles simula los papeles de administrador y árbitro. No hay a
 
 Los datos se guardan en localStorage de cada navegador. No se sincronizan entre dispositivos ni entre usuarios. No hay base de datos compartida, respaldos externos, correos automáticos, transferencias bancarias ni facturación electrónica. No ingresar información real de clientes en esta demostración.
 
-El portal de organizadores, la administración de jugadores y las sanciones quedan fuera de esta versión. La beta permite reprogramar y eliminar partidos de forma recuperable; no implementa liquidaciones contables definitivas ni transferencias bancarias.
+El portal de organizadores, la administración de plantillas de jugadores y la resolución disciplinaria quedan fuera de esta versión. El informe registra las tarjetas del partido. La beta permite reprogramar y eliminar partidos de forma recuperable; no implementa liquidaciones contables definitivas ni transferencias bancarias.
 
 Para un piloto operativo: definir reglas con la asociación, implementar cuentas reales y permisos de servidor, base de datos compartida, respaldos y restauración, registro de cambios, recuperación de acceso, notificaciones y pruebas independientes de seguridad.
 
@@ -96,12 +119,16 @@ node check-domain.mjs
 
 También puede ejecutar `npm run check` (o `node --run check` con una versión compatible de Node.js) para comprobar la sintaxis y todas las reglas.
 
-Se incluyen 48 comprobaciones: 12 de nombramientos y honorarios, 13 de calendario y avisos, y 23 de edición, reprogramación, eliminación, restauración y conservación de movimientos económicos. Para ejecutar solo las de calendario: `node check-calendar.mjs`. Para las de gestión de partidos: `node check-matches.mjs`.
+Se incluyen 65 comprobaciones: 12 de nombramientos y honorarios, 13 de calendario y avisos, y 23 de edición, reprogramación, eliminación, restauración y conservación de movimientos económicos, y 17 de informes, acceso, versiones, destinatarios y PDF. Para ejecutar solo las de calendario: `node check-calendar.mjs`. Para las de gestión de partidos: `node check-matches.mjs`.
 
 ### Estructura
 
 - `dist/index.html`: página de entrada.
 - `dist/app.mjs`: pantallas y recorridos de la demostración.
+- `dist/reports.mjs`: reglas de edición, revisión y entrega simulada de informes.
+- `dist/report-ui.mjs`: formulario, revisión, historial y listado de informes.
+- `dist/report-pdf.mjs`: exportación PDF con paginación y caracteres españoles.
+- `check-reports.mjs`: comprobaciones de informes y exportación.
 - `dist/domain.mjs`: reglas de nombramientos y cuentas.
 - `dist/match-management.mjs`: validación, revisión y aplicación de cambios de partidos, eliminación recuperable e historial.
 - `dist/calendar.mjs`: agenda, validación de eventos, cálculo de avisos y exportación .ics.
