@@ -4,7 +4,7 @@ Demostración pública para presentar el flujo de una asociación arbitral. Nomb
 
 **Abrir beta:** https://a-gestion-beta.cgpt415717.chatgpt.site
 
-**Repositorio privado:** https://github.com/JohnderCoronado/a-gestion-arbitral
+**Repositorio público:** https://github.com/JohnderCoronado/a-gestion-arbitral
 
 Se puede compartir el enlace sin iniciar sesión. Cada navegador mantiene su propia copia de los datos de demostración.
 
@@ -151,4 +151,4 @@ Los archivos de `dist/` son el código editable de esta beta y deben guardarse e
 - **Issues** sirve para anotar errores o ideas de funciones. Evite incluir datos personales reales.
 - **Pull request** permite revisar un grupo de cambios antes de incorporarlo a la rama principal.
 
-Este repositorio es privado y la beta de demostración es pública. Guardar un cambio en GitHub no actualiza automáticamente la beta: después de comprobarlo se debe publicar la nueva versión en el alojamiento.
+El repositorio y la beta de demostración son públicos. Guardar un cambio en GitHub no actualiza automáticamente la beta: después de comprobarlo se debe publicar la nueva versión en el alojamiento.
