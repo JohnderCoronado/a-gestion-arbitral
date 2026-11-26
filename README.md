@@ -1,4 +1,4 @@
-# A · Beta de presentación 1.2
+# A · Beta de presentación 1.3
 
 Demostración pública para presentar el flujo de una asociación arbitral. Nombres, correos, torneos, partidos y montos son ficticios. No representa ni está afiliada a una asociación, liga o federación real.
 
@@ -7,6 +7,16 @@ Demostración pública para presentar el flujo de una asociación arbitral. Nomb
 **Repositorio público:** https://github.com/JohnderCoronado/a-gestion-arbitral
 
 Se puede compartir el enlace sin iniciar sesión. Cada navegador mantiene su propia copia de los datos de demostración.
+
+## Interfaz y navegación
+
+- Base gris y blanca, con azul en acciones y selección de secciones. El verde se reserva para estados de confirmación.
+- Texto y controles más grandes, contraste reforzado y formularios adaptables.
+- Todas las secciones están visibles en el menú móvil. El perfil de prueba está identificado junto al selector.
+- El resumen muestra una acción según los pendientes de la semana y permite consultar partidos de otras fechas.
+- Cada partido ofrece Asignar árbitros o Ver equipo arbitral, Informe arbitral y Editar partido. Más opciones contiene Reprogramar y Eliminar partido.
+- Nuevo partido agrupa Datos del partido, Fecha y lugar y Equipo arbitral y honorarios. Las coordenadas son opcionales y los honorarios de asistentes se muestran según el equipo seleccionado.
+- Los formularios tienen encabezados identificados para lectores de pantalla y la página ofrece un enlace de acceso al contenido.
 
 ## Informes arbitrales
 
@@ -33,7 +43,7 @@ Se puede compartir el enlace sin iniciar sesión. Cada navegador mantiene su pro
 
 ## Modificar, reprogramar y eliminar partidos
 
-- Cada partido tiene las opciones Editar, Reprogramar y Eliminar, disponibles en el perfil Administrador y en el detalle de su equipo arbitral.
+- Cada partido ofrece Editar partido y el menú Más opciones con Reprogramar y Eliminar partido. También están disponibles en el detalle de su equipo arbitral, desde el perfil Administrador.
 - Editar permite cambiar torneo, equipos, fecha, hora, duración, cancha, coordenadas, cantidad de árbitros, cobro y honorarios por puesto.
 - Reprogramar ofrece un formulario breve para cambiar fecha, hora o cancha y registrar un motivo opcional.
 - Antes de guardar se presenta una revisión con los valores anteriores y nuevos, los árbitros que deben confirmar de nuevo y los puestos que quedarán libres por falta de disponibilidad, cruces o cambios de panel.

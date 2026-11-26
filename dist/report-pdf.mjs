@@ -15,14 +15,14 @@ export function reportPDF(report, options = {}) {
   let content = '', y = 0;
   function page() {
     if (content) pages.push(content);
-    content = '0.10 0.20 0.16 rg\nBT /F2 18 Tf 42 798 Td (A) Tj ET\n';
+    content = '0.14 0.19 0.28 rg\nBT /F2 18 Tf 42 798 Td (A) Tj ET\n';
     content += 'BT /F1 9 Tf 65 800 Td (INFORME ARBITRAL) Tj ET\n';
-    content += `0.45 0.50 0.45 rg\nBT /F1 8 Tf 42 24 Td (${literal('A - Beta de demostración | Página ' + (pages.length + 1))}) Tj ET\n`;
+    content += `0.36 0.41 0.48 rg\nBT /F1 8 Tf 42 24 Td (${literal('A - Beta de demostración | Página ' + (pages.length + 1))}) Tj ET\n`;
     y = 770;
   }
   function line(value, bold = false, size = 10) {
     if (y < 55) page();
-    content += `0.16 0.20 0.16 rg\nBT /${bold ? 'F2' : 'F1'} ${size} Tf 42 ${y} Td (${literal(value)}) Tj ET\n`;
+    content += `0.14 0.19 0.28 rg\nBT /${bold ? 'F2' : 'F1'} ${size} Tf 42 ${y} Td (${literal(value)}) Tj ET\n`;
     y -= size + 6;
   }
   function paragraph(value, bold = false) {
@@ -51,7 +51,7 @@ export function reportPDF(report, options = {}) {
   function section(title) {
     if (y < 100) page();
     y -= 12;
-    content += `0.91 0.95 0.89 rg 42 ${y - 5} 511 22 re f\n`;
+    content += `0.93 0.95 0.98 rg 42 ${y - 5} 511 22 re f\n`;
     line(title, true, 10);
     y -= 5;
   }

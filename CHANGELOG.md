@@ -1,5 +1,15 @@
 # Historial de A
 
+## Beta de presentación 1.3 — 25 de noviembre de 2026
+
+- Interfaz gris y blanca con acentos azules, controles más grandes y mejor contraste.
+- Navegación móvil con todas las secciones visibles y selector de perfil identificado.
+- Resumen con acciones según los pendientes reales y acceso a partidos de otras semanas.
+- Acciones de partido reorganizadas y formulario de creación dividido en secciones.
+- Mejoras de teclado, identificación de diálogos y presentación móvil de disponibilidad e informes.
+- PDF con colores acordes con la nueva interfaz.
+
+
 ## Beta de presentación 1.2 — 10 de noviembre de 2026
 
 - Correo de informes por torneo y acceso desde cada nombramiento confirmado.
