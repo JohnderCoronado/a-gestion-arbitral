@@ -1,5 +1,14 @@
 # Historial de A
 
+## Beta de presentación 1.4 — 25 de noviembre de 2026
+
+- Modo oscuro por defecto y selector de apariencia persistente, sin alterar los datos de la demostración.
+- Colores específicos para formularios, calendario, estados, informes, diálogos y navegación.
+- Contraste reforzado en ambos modos y bordes visibles de controles.
+- Correcciones de ancho en pantallas de 320 píxeles y del indicador de los selectores.
+- Comprobaciones de preferencia, recarga y almacenamiento bloqueado, además de los controles existentes.
+- La copia HTML independiente incluye ambos modos.
+
 ## Beta de presentación 1.3 — 25 de noviembre de 2026
 
 - Interfaz gris y blanca con acentos azules, controles más grandes y mejor contraste.

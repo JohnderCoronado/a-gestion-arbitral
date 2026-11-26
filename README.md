@@ -1,4 +1,4 @@
-# A · Beta de presentación 1.3
+# A · Beta de presentación 1.4
 
 Demostración pública para presentar el flujo de una asociación arbitral. Nombres, correos, torneos, partidos y montos son ficticios. No representa ni está afiliada a una asociación, liga o federación real.
 
@@ -10,7 +10,9 @@ Se puede compartir el enlace sin iniciar sesión. Cada navegador mantiene su pro
 
 ## Interfaz y navegación
 
-- Base gris y blanca, con azul en acciones y selección de secciones. El verde se reserva para estados de confirmación.
+- Modo oscuro inicial con grises azulados, texto claro y acentos azules. El botón de la luna alterna entre oscuro y claro; la preferencia se guarda en este navegador.
+- El cambio de apariencia conserva los datos, filtros y formularios abiertos. Si el navegador impide guardar preferencias, el cambio dura durante la sesión.
+- Contraste del texto comprobado en las siete secciones de administración, las cuatro del árbitro y los formularios revisados. Se verificó el diseño oscuro en anchos de 320 y 390 píxeles; esto no sustituye pruebas en teléfonos físicos ni una auditoría completa de accesibilidad.
 - Texto y controles más grandes, contraste reforzado y formularios adaptables.
 - Todas las secciones están visibles en el menú móvil. El perfil de prueba está identificado junto al selector.
 - El resumen muestra una acción según los pendientes de la semana y permite consultar partidos de otras fechas.
