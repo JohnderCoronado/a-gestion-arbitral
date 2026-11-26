@@ -1,6 +1,6 @@
 {
   "name": "a-gestion-arbitral",
-  "version": "1.4.0-beta.1",
+  "version": "1.5.0-beta.1",
   "private": true,
   "description": "Beta de demostración para gestión de asociaciones arbitrales",
   "type": "module",

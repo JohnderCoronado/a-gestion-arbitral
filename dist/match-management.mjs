@@ -1,10 +1,11 @@
-import {active,eligibility} from './domain.mjs';
+import {active,assign,eligibility,openPosition,refereePositions} from './domain.mjs?v=1.5';
 import {validateCalendarEvent} from './calendar.mjs';
 
 const fields=['tournament','home','away','date','time','duration','venue','lat','lng','charge'];
 const reconfirmFields=['tournament','home','away','date','time','duration','venue','lat','lng'];
 const labels={tournament:'Torneo',home:'Equipo local',away:'Equipo visitante',date:'Fecha',time:'Hora',duration:'Duración',venue:'Cancha',lat:'Latitud',lng:'Longitud',charge:'Cobro al organizador'};
-const roles=['Central','Asistente 1','Asistente 2'];
+const orderedPositions = slots => slots.length>0 && slots[0].role==='Central' &&
+ slots.every((slot,i)=>refereePositions.indexOf(slot.role)>(i?refereePositions.indexOf(slots[i-1].role):-1));
 const requireAdmin=actor=>{if(actor!=='admin')throw Error('Esta acción corresponde al administrador.');};
 const find=(db,id)=>{const m=db.matches.find(m=>m.id===id);if(!m)throw Error('No se encontró el partido.');return m;};
 const name=(db,id)=>db.refs.find(r=>r.id===id)?.name||'Árbitro';
@@ -20,7 +21,7 @@ export function validateMatch(db,m){
  if(!integer(m.charge,10000000))throw Error('Revise el cobro al organizador.');
  const noLat=m.lat===null||m.lat===undefined,noLng=m.lng===null||m.lng===undefined;
  if(noLat!==noLng||(!noLat&&(!Number.isFinite(m.lat)||!Number.isFinite(m.lng)||Math.abs(m.lat)>90||Math.abs(m.lng)>180)))throw Error('Ingrese ambas coordenadas dentro de sus rangos o deje ambas vacías.');
- if(![1,3].includes(m.slots.length)||m.slots.some((s,i)=>s.role!==roles[i]||!integer(s.fee,1000000)))throw Error('Revise los puestos y honorarios del equipo arbitral.');
+ if(!orderedPositions(m.slots)||m.slots.some(s=>!integer(s.fee,1000000)))throw Error('Revise los puestos y honorarios del equipo arbitral.');
  return m;
 }
 
@@ -30,10 +31,10 @@ export function prepareMatchUpdate(db,id,patch={},actor='admin',options={}){
  if(!current.deletedAt&&restoring)throw Error('El partido ya está activo.');
  const next=structuredClone(current);
  for(const key of fields)if(Object.hasOwn(patch,key))next[key]=patch[key];
- const crew=patch.crew??current.slots.length;if(![1,3].includes(crew))throw Error('Seleccione uno o tres árbitros.');
- next.slots=roles.slice(0,crew).map(role=>{
+ const positions=patch.positions??current.slots.map(s=>s.role);
+ next.slots=positions.map(role=>{
   const previous=current.slots.find(s=>s.role===role);
-  const s=previous?structuredClone(previous):{id:crypto.randomUUID(),role,ref:'',status:'empty',fee:role==='Central'?22000:16000,paid:false};
+  const s=previous?structuredClone(previous):openPosition(role);
   if(Object.hasOwn(patch.fees||{},role))s.fee=patch.fees[role];
   return s;
  });
@@ -45,7 +46,8 @@ export function prepareMatchUpdate(db,id,patch={},actor='admin',options={}){
   if(!retained||retained.fee!==s.fee)throw Error(`El puesto de ${name(db,s.ref)} tiene un pago registrado. Revierta ese registro antes de cambiar su importe o retirar el puesto.`);
  }
  const changes=fields.filter(f=>current[f]!==next[f]).map(field=>({field,label:labels[field],before:current[field]??null,after:next[field]??null}));
- if(crew!==current.slots.length)changes.push({field:'crew',label:'Cantidad de árbitros',before:current.slots.length,after:crew});
+ const previousPositions=current.slots.map(s=>s.role).join(', ');
+ if(positions.join(', ')!==previousPositions)changes.push({field:'positions',label:'Puestos del equipo arbitral',before:previousPositions,after:positions.join(', ')});
  for(const s of next.slots){const old=current.slots.find(o=>o.id===s.id);if(old&&old.fee!==s.fee)changes.push({field:'fee',label:`Honorarios · ${s.role}`,before:old.fee,after:s.fee});}
  const mustReconfirm=restoring||reconfirmFields.some(f=>current[f]!==next[f]),renewed=[],released=[];
  const context={...db,matches:db.matches.map(m=>m.id===id?next:m)};
@@ -56,6 +58,13 @@ export function prepareMatchUpdate(db,id,patch={},actor='admin',options={}){
    if(s.paid)throw Error(`${name(db,s.ref)} tiene un pago registrado y no puede conservar el nombramiento: ${result.reason}. Revierta ese pago antes de liberar el puesto.`);
    released.push({ref:s.ref,role:s.role,reason:result.reason});Object.assign(s,{ref:'',status:'empty',paid:false});
   }else{s.status='pending';renewed.push({ref:s.ref,role:s.role});}
+ }
+ for(const [role,ref] of Object.entries(patch.invite||{})){
+  const slot=next.slots.find(s=>s.role===role);
+  if(!slot)throw Error('Seleccione un puesto válido.');
+  const before=slot.ref?name(db,slot.ref):'Sin asignar';
+  assign(context,id,slot.id,ref);
+  changes.push({field:'ref',label:role,before,after:`${name(db,ref)} · Por invitar`});
  }
  for(const s of current.slots.filter(s=>active(s)&&!next.slots.some(n=>n.id===s.id)))released.push({ref:s.ref,role:s.role,reason:'Puesto retirado del equipo arbitral'});
  return {matchId:id,baseFingerprint:JSON.stringify(current),before:snapshot(current),after:next,changes,renewed,released,kind:restoring?'restore':options.reschedule?'reschedule':'edit',reason:String(patch.reason||'').trim().slice(0,500),noop:!restoring&&changes.length===0};

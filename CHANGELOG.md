@@ -1,5 +1,10 @@
 # Historial de A
 
+## Beta de presentación 1.5 — 26 de noviembre de 2026
+
+- Confirmación de pagos recibidos desde Mis pagos, visible también en Cobros y pagos.
+- Selección de central y asistentes por puesto, con asistentes opcionales y comprobación de disponibilidad antes de invitar.
+
 ## Beta de presentación 1.4 — 25 de noviembre de 2026
 
 - Modo oscuro por defecto y selector de apariencia persistente, sin alterar los datos de la demostración.
