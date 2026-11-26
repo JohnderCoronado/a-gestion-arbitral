@@ -1,5 +1,10 @@
 # Historial de A
 
+## Beta de presentación 1.6 — 26 de noviembre de 2026
+
+- Revisión del horario y la disponibilidad al seleccionar un árbitro, antes de guardar el partido.
+- Archivo recuperable de partidos y eventos desde el calendario para empezar una demostración desde cero.
+
 ## Beta de presentación 1.5 — 26 de noviembre de 2026
 
 - Confirmación de pagos recibidos desde Mis pagos, visible también en Cobros y pagos.

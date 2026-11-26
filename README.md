@@ -1,4 +1,4 @@
-# A · Beta de presentación 1.5
+# A · Beta de presentación 1.6
 
 Demostración pública para presentar el flujo de una asociación arbitral. Nombres, correos, torneos, partidos y montos son ficticios. No representa ni está afiliada a una asociación, liga o federación real.
 
@@ -11,6 +11,8 @@ Se puede compartir el enlace sin iniciar sesión. Cada navegador mantiene su pro
 ## Interfaz y navegación
 
 - En Nuevo partido y Editar partido se eligen los árbitros por puesto. El central se puede asignar al crear el partido o después. Deje cada asistente sin seleccionar si el partido no lo requiere. Los árbitros elegidos reciben una invitación en la beta.
+- Los selectores bloquean a quienes están ocupados o no cubren el horario completo. Se actualizan al cambiar la fecha, hora, duración o torneo.
+- En Calendario → Gestionar programación se puede archivar la jornada y empezar desde un calendario vacío. La copia se puede recuperar en el mismo navegador.
 - En Mis pagos, cada árbitro puede confirmar un depósito recibido por un nombramiento aceptado. Administración también puede registrar o deshacer el pago en Cobros y pagos. Ambos perfiles consultan el mismo registro de la demostración.
 
 - Modo oscuro inicial con grises azulados, texto claro y acentos azules. El botón de la luna alterna entre oscuro y claro; la preferencia se guarda en este navegador.
