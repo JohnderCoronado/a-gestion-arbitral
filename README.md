@@ -1,4 +1,4 @@
-# A · Beta de presentación 1.6
+# A · Beta de presentación 1.6.1
 
 Demostración pública para presentar el flujo de una asociación arbitral. Nombres, correos, torneos, partidos y montos son ficticios. No representa ni está afiliada a una asociación, liga o federación real.
 
@@ -89,7 +89,7 @@ Estas funciones operan sobre los datos locales de esta demostración; los cambio
 10. Regrese al resumen y pruebe las cuatro tarjetas; cada una abre su lista correspondiente.
 11. Exporte el registro de cobros a CSV si desea revisarlo en una hoja de cálculo.
 
-El botón Restablecer demostración devuelve los datos iniciales. En celular aparece como un icono de flecha circular junto a la marca.
+Restablecer demostración vacía los partidos, nombramientos, informes, cobros, pagos, eventos, recordatorios y copias de programación de este navegador. Devuelve los torneos de ejemplo y conserva los perfiles de árbitros y su disponibilidad. En celular aparece como un icono de flecha circular junto a la marca.
 
 ## Reglas de la beta
 

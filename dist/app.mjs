@@ -27,13 +27,21 @@ const statusBadge=s=>badge(...(statuses[s]||statuses.empty));
 const uid=()=>crypto.randomUUID();
 const KEY='arbitra-beta-v1';let storageOK=true;
 function seedCalendarEvents(){return [{id:'demo-coordination',title:'Reunión de coordinación',category:'Reunión',date:addDays(today(),1),time:'18:00',duration:60,venue:'Sala de reuniones · demostración',notes:'Revisar la disponibilidad y la programación de la próxima jornada.',reminderDays:2,reminderSeen:false,status:'scheduled',sequence:0}]}
+function emptyDemo(refs,week=monday(today())){
+ const refIds=refs.map(ref=>ref.id);
+ const tournaments=[
+  {id:'t1',name:'Copa Horizonte',organizer:'Comité deportivo local',category:'Fútbol 11 · Libre',refs:refIds},
+  {id:'t2',name:'Torneo Empresarial',organizer:'Organización empresarial',category:'Fútbol 7 · Libre',refs:refIds.slice(0,6)},
+  {id:'t3',name:'Liga Juvenil Regional',organizer:'Comité de liga juvenil',category:'Fútbol 11 · Juvenil',refs:refIds.slice(2)}
+ ];
+ return {version:1,week,refs,tournaments,matches:[],calendarEvents:[],events:[]};
+}
 function seed(){
  const week=monday(today());
  const names=['Andrés Solís','Daniel Vargas','María Rodríguez','José Alvarado','Luis Chaves','Valeria Rojas','Carlos Méndez','Sofía Quesada'];
  const refs=names.map((name,i)=>({id:'r'+i,name,email:`${name.split(' ')[0].toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'')}@ejemplo.invalid`,level:i<4?'Primera categoría':'Segunda categoría',availability:Object.fromEntries(Array.from({length:7},(_,j)=>[addDays(week,j),{start:'06:00',end:'22:00'}]))}));
  refs[3].availability[addDays(week,5)]={start:'14:00',end:'22:00'};
  refs[6].availability[addDays(week,6)]={start:'06:00',end:'12:00'};
- const tournaments=[{id:'t1',name:'Copa Horizonte',organizer:'Comité deportivo local',category:'Fútbol 11 · Libre',refs:refs.map(r=>r.id)},{id:'t2',name:'Torneo Empresarial',organizer:'Organización empresarial',category:'Fútbol 7 · Libre',refs:refs.slice(0,6).map(r=>r.id)},{id:'t3',name:'Liga Juvenil Regional',organizer:'Comité de liga juvenil',category:'Fútbol 11 · Juvenil',refs:refs.slice(2).map(r=>r.id)}];
  const slot=(role,ref='',status='empty',fee=18000)=>({id:uid(),role,ref,status,fee,paid:false});
  const matches=[
  {id:'m1',tournament:'t1',home:'Deportivo Aurora',away:'Atlético Eclipse',date:addDays(week,5),time:'09:00',duration:120,venue:'Estadio Aurora · ubicación ficticia',lat:null,lng:null,charge:70000,collected:false,slots:[slot('Central','r0','pending',22000),slot('Asistente 1','r1','accepted',16000),slot('Asistente 2')]},
@@ -43,7 +51,7 @@ function seed(){
  {id:'m5',tournament:'t3',home:'Academia Fénix',away:'Juvenil Centella',date:addDays(week,6),time:'14:00',duration:100,venue:'Estadio Centella · ubicación ficticia',lat:null,lng:null,charge:55000,collected:false,slots:[slot('Central','r2','pending',20000),slot('Asistente 1','r7','accepted',14000),slot('Asistente 2')]},
  {id:'m6',tournament:'t2',home:'Deportivo Atlas',away:'Halcones FC',date:addDays(week,4),time:'19:00',duration:80,venue:'Cancha Cometa · ubicación ficticia',lat:null,lng:null,charge:35000,collected:false,slots:[slot('Central','r0','accepted',22000)]}
  ];
- return {version:1,week,refs,tournaments,matches,calendarEvents:seedCalendarEvents(),events:[{text:'Beta lista para recorrer la primera jornada.',at:Date.now()}]};
+ return {...emptyDemo(refs,week),matches,calendarEvents:seedCalendarEvents(),events:[{text:'Beta lista para recorrer la primera jornada.',at:Date.now()}]};
 }
 let db;try{db=JSON.parse(localStorage.getItem(KEY));if(!db||db.version!==1||!Array.isArray(db.matches)||!Array.isArray(db.refs)||!Array.isArray(db.tournaments))db=seed()}catch{db=seed();storageOK=false}
 migrateDemoLabels(db);
@@ -67,7 +75,7 @@ const navActive=id=>view===id||(id==='matches'&&['crews','invitations','trash'].
 const weekButtons=()=>`<div class="week-controls"><button class="iconbtn" data-action="week-prev" aria-label="Semana anterior">${icon('left')}</button><span class="subtle">${weekLabel(week)}</span><button class="iconbtn" data-action="week-next" aria-label="Semana siguiente">${icon('chevron')}</button><button class="text-button" data-action="week-today">Esta semana</button></div>`;
 function render(){
  const pending=liveMatches(db).flatMap(m=>m.slots).filter(s=>s.status==='pending').length;
- $('#app').innerHTML=`<div class="shell"><aside class="sidebar"><div class="brand" aria-label="A"><span class="brand-mark">A</span></div><div class="workspace"><span class="avatar">AH</span><div style="font-size:11px">Asociación Horizonte<small>Espacio de demostración</small></div></div><div class="navlabel">${role==='admin'?'ADMINISTRACIÓN':'PORTAL DEL ÁRBITRO'}</div><nav class="nav ${role==='ref'?'ref-nav':''}" aria-label="Principal">${navs[role].map(([id,ico,label])=>`<button data-view="${id}" title="${label}" class="${navActive(id)?'active':''}" ${navActive(id)?'aria-current="page"':''}>${icon(ico)}${label}${id==='matches'&&pending?`<span class="count">${pending}</span>`:''}</button>`).join('')}</nav><div class="sidebar-bottom"><div class="beta-box"><strong>Un espacio para probar</strong>Datos ficticios. Cambie de perfil para recorrer ambos lados del nombramiento.</div><button data-action="reset">${icon('reset')}Restablecer demostración</button></div></aside><main class="main" id="main-content" tabindex="-1"><header class="topbar"><div class="breadcrumb"><span class="breadcrumb-workspace">Asociación Horizonte</span><b>${navTitle()}</b></div><div class="top-right"><span class="demo-tag">BETA 1.6</span><button type="button" class="theme-toggle" data-action="toggle-theme" aria-label="Modo oscuro" aria-pressed="${window.ATheme.get()==='dark'}" title="Activar o desactivar modo oscuro">${icon('moon')}<span>Modo oscuro</span></button>${role==='admin'?`<button class="reminder-toggle" data-action="open-reminders" aria-label="Ver recordatorios">${icon('bell')}${dueReminders(db.calendarEvents).length?`<span>${dueReminders(db.calendarEvents).length}</span>`:''}</button>`:''}<label class="role-switch"><span class="role-label">Perfil de prueba</span><select id="role" aria-label="Cambiar perfil de demostración"><option value="admin" ${role==='admin'?'selected':''}>Administrador</option>${db.refs.map(r=>`<option value="${r.id}" ${role==='ref'&&refId===r.id?'selected':''}>Árbitro · ${esc(r.name)}</option>`).join('')}</select></label><div class="avatar">${role==='admin'?'AD':initials(refName(refId))}</div></div></header><div class="content">${content()}</div></main></div>`;
+ $('#app').innerHTML=`<div class="shell"><aside class="sidebar"><div class="brand" aria-label="A"><span class="brand-mark">A</span></div><div class="workspace"><span class="avatar">AH</span><div style="font-size:11px">Asociación Horizonte<small>Espacio de demostración</small></div></div><div class="navlabel">${role==='admin'?'ADMINISTRACIÓN':'PORTAL DEL ÁRBITRO'}</div><nav class="nav ${role==='ref'?'ref-nav':''}" aria-label="Principal">${navs[role].map(([id,ico,label])=>`<button data-view="${id}" title="${label}" class="${navActive(id)?'active':''}" ${navActive(id)?'aria-current="page"':''}>${icon(ico)}${label}${id==='matches'&&pending?`<span class="count">${pending}</span>`:''}</button>`).join('')}</nav><div class="sidebar-bottom"><div class="beta-box"><strong>Un espacio para probar</strong>Datos ficticios. Cambie de perfil para recorrer ambos lados del nombramiento.</div><button data-action="reset">${icon('reset')}Restablecer demostración</button></div></aside><main class="main" id="main-content" tabindex="-1"><header class="topbar"><div class="breadcrumb"><span class="breadcrumb-workspace">Asociación Horizonte</span><b>${navTitle()}</b></div><div class="top-right"><span class="demo-tag">BETA 1.6.1</span><button type="button" class="theme-toggle" data-action="toggle-theme" aria-label="Modo oscuro" aria-pressed="${window.ATheme.get()==='dark'}" title="Activar o desactivar modo oscuro">${icon('moon')}<span>Modo oscuro</span></button>${role==='admin'?`<button class="reminder-toggle" data-action="open-reminders" aria-label="Ver recordatorios">${icon('bell')}${dueReminders(db.calendarEvents).length?`<span>${dueReminders(db.calendarEvents).length}</span>`:''}</button>`:''}<label class="role-switch"><span class="role-label">Perfil de prueba</span><select id="role" aria-label="Cambiar perfil de demostración"><option value="admin" ${role==='admin'?'selected':''}>Administrador</option>${db.refs.map(r=>`<option value="${r.id}" ${role==='ref'&&refId===r.id?'selected':''}>Árbitro · ${esc(r.name)}</option>`).join('')}</select></label><div class="avatar">${role==='admin'?'AD':initials(refName(refId))}</div></div></header><div class="content">${content()}</div></main></div>`;
 }
 function head(eyebrow,title,subtitle,button=''){return `<div class="page-head"><div><div class="eyebrow">${eyebrow}</div><h1>${title}</h1><p>${subtitle}</p></div>${button}</div>`}
 function stat(label,value,note,ico,action='') {
@@ -83,7 +91,7 @@ function overview(){
  const matches=weekMatches(),confirmed=matches.filter(m=>matchState(m)==='accepted').length,pending=matches.flatMap(m=>m.slots).filter(s=>s.status==='pending').length,empty=matches.flatMap(m=>m.slots).filter(s=>!active(s)).length;
  const available=db.refs.filter(r=>Object.keys(r.availability).some(d=>d>=week&&d<=addDays(week,6))).length;
  return head('ADMINISTRACIÓN','Resumen de la asociación',`${weekLabel(week)} · Consulte la jornada y sus pendientes.`,`<button class="btn primary" data-action="new-match">${icon('plus')}Nuevo partido</button>`)+
- `<div class="stats">${stat('Partidos esta semana',matches.length,`${db.tournaments.length} torneos registrados`,'calendar','summary-matches')}${stat('Equipos arbitrales listos',confirmed,`${confirmed} de ${matches.length} partidos`,'check','summary-crews')}${stat('Invitaciones pendientes',pending,`${empty} puestos por cubrir`,'mail','summary-invitations')}${stat('Árbitros con disponibilidad',available,`De ${db.refs.length} integrantes`,'people','summary-refs')}</div>${reminderBanner()}<div class="grid-main"><section class="panel"><div class="panel-header"><div><h2>Partidos de esta semana</h2><p>${weekLabel(week)} · ${matches.length} partidos</p></div><button class="text-button" data-view="matches">Ver todos los partidos</button></div>${matches.length?matches.slice(0,3).map(matchCard).join(''):emptyState('No hay partidos esta semana.','Puede registrar un partido o consultar la programación de otras fechas.')+`<div class="empty-actions"><button class="btn secondary" data-view="matches">Ver todos los partidos</button></div>`}<div class="panel-footer"><button class="btn secondary small" data-view="calendar">${icon('calendar')}Abrir calendario</button></div></section>${sidePanel(empty)}</div><section class="quick-links" aria-label="Accesos rápidos">${[['calendar','calendar','Calendario','Partidos, eventos y recordatorios'],['tournaments','trophy','Torneos','Competiciones y paneles arbitrales'],['refs','people','Árbitros','Integrantes y disponibilidad'],['finance','wallet','Cobros y pagos','Cuentas de la asociación']].map(([v,i,t,n])=>`<button data-view="${v}" class="quick-link">${icon(i)}<span><strong>${t}</strong><small>${n}</small></span></button>`).join('')}</section><p class="privacy-note">Beta 1.6 · Datos ficticios guardados en este navegador. Los perfiles se simulan y no se envían correos.</p>`;
+ `<div class="stats">${stat('Partidos esta semana',matches.length,`${db.tournaments.length} torneos registrados`,'calendar','summary-matches')}${stat('Equipos arbitrales listos',confirmed,`${confirmed} de ${matches.length} partidos`,'check','summary-crews')}${stat('Invitaciones pendientes',pending,`${empty} puestos por cubrir`,'mail','summary-invitations')}${stat('Árbitros con disponibilidad',available,`De ${db.refs.length} integrantes`,'people','summary-refs')}</div>${reminderBanner()}<div class="grid-main"><section class="panel"><div class="panel-header"><div><h2>Partidos de esta semana</h2><p>${weekLabel(week)} · ${matches.length} partidos</p></div><button class="text-button" data-view="matches">Ver todos los partidos</button></div>${matches.length?matches.slice(0,3).map(matchCard).join(''):emptyState('No hay partidos esta semana.','Puede registrar un partido o consultar la programación de otras fechas.')+`<div class="empty-actions"><button class="btn secondary" data-view="matches">Ver todos los partidos</button></div>`}<div class="panel-footer"><button class="btn secondary small" data-view="calendar">${icon('calendar')}Abrir calendario</button></div></section>${sidePanel(empty)}</div><section class="quick-links" aria-label="Accesos rápidos">${[['calendar','calendar','Calendario','Partidos, eventos y recordatorios'],['tournaments','trophy','Torneos','Competiciones y paneles arbitrales'],['refs','people','Árbitros','Integrantes y disponibilidad'],['finance','wallet','Cobros y pagos','Cuentas de la asociación']].map(([v,i,t,n])=>`<button data-view="${v}" class="quick-link">${icon(i)}<span><strong>${t}</strong><small>${n}</small></span></button>`).join('')}</section><p class="privacy-note">Beta 1.6.1 · Datos ficticios guardados en este navegador. Los perfiles se simulan y no se envían correos.</p>`;
 }
 function periodSelect(){return `<label class="compact-label">Periodo<select id="match-period" aria-label="Periodo"><option value="all" ${matchPeriod==='all'?'selected':''}>Todos los partidos</option><option value="week" ${matchPeriod==='week'?'selected':''}>Esta semana</option></select></label>`}
 function matchBase(){return sorted(liveMatches(db).filter(m=>(matchPeriod==='all'||(m.date>=week&&m.date<=addDays(week,6)))&&(matchTournament==='all'||m.tournament===matchTournament)))}
@@ -301,6 +309,25 @@ function replaceSchedule(restoreId){
  navigate('calendar');
  toast(restored?'Programación recuperada.':'Programación archivada. Ya puede crear un evento.');
 }
+function resetDemo(){
+ const previous=db;
+ db=emptyDemo(previous.refs);
+ if(!persist()){
+  db=previous;
+  toast('No se pudo guardar el restablecimiento. Sus datos siguen disponibles.');
+  return;
+ }
+ pendingMatchPlan=null;
+ reminderClockKey='';
+ calendarDate=today();
+ calendarMonth=calendarDate.slice(0,7);
+ calendarType='all';
+ financeTab='charges';
+ tournamentFilter='all';
+ role='admin';
+ navigate('overview');
+ toast('Demostración limpia. Se conservó la disponibilidad de los árbitros.');
+}
 function navigate(name){if($('#modal').open)$('#modal').close();view=name;day='';query='';filter='all';matchPeriod='all';matchTournament='all';refScope='all';financeState='all';refPaymentState='all';refTab='all';if(name==='overview')week=monday(today());render();window.scrollTo({top:0});}
 function extraAction(action,id){
  if(['edit-match','reschedule-match','delete-match','show-deleted-matches','deleted-details','restore-match','back-match-edit','apply-match-update','manage-schedule','clear-schedule','restore-schedule'].includes(action)&&role!=='admin')throw Error('Esta acción corresponde al administrador.');
@@ -399,8 +426,8 @@ document.addEventListener('click',event=>{
   render();toast(refereeConfirm?'Pago recibido confirmado.':paid?'Pago registrado.':'Registro de pago revertido.');break;
  }
  case 'export':exportCSV();break;
- case 'reset':openModal('Restablecer demostración',`<p class="hint">Se borrarán los cambios guardados en este navegador y volverán los datos ficticios iniciales.</p><div class="modal-foot"><button class="btn secondary" data-action="close">Conservar cambios</button><button class="btn danger" data-action="confirm-reset">Restablecer datos</button></div>`);break;
- case 'confirm-reset':db=seed();persist();matchPeriod='all';matchTournament='all';refScope='all';financeState='all';refTab='all';refPaymentState='all';calendarMonth=today().slice(0,7);calendarDate=today();calendarType='all';role='admin';view='overview';week=monday(today());day='';filter='all';query='';tournamentFilter='all';$('#modal').close();render();toast('Demostración restablecida.');break;
+ case 'reset':openModal('Restablecer demostración',`<p class="hint">Se borrarán de este navegador los partidos, nombramientos, informes, pagos, eventos, recordatorios y las copias de programación archivadas. Se restablecerán los torneos de ejemplo.</p><p class="hint">Se conservarán los perfiles de árbitros y todos sus horarios de disponibilidad.</p><div class="modal-foot"><button class="btn secondary" data-action="close">Cancelar</button><button class="btn danger" data-action="confirm-reset">Restablecer datos</button></div>`);break;
+ case 'confirm-reset':resetDemo();break;
  }}catch(error){if($('#modal').open&&$('#modal-error'))$('#modal-error').textContent=error.message;else toast(error.message)}
 });
 document.addEventListener('input',e=>{if(e.target.id==='search'){query=e.target.value;$('#match-list').innerHTML=matchList()}});

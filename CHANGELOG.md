@@ -1,5 +1,9 @@
 # Historial de A
 
+## Beta de presentación 1.6.1 — 27 de noviembre de 2026
+
+- Restablecer demostración deja la programación vacía y conserva la disponibilidad de todos los árbitros.
+
 ## Beta de presentación 1.6 — 26 de noviembre de 2026
 
 - Revisión del horario y la disponibilidad al seleccionar un árbitro, antes de guardar el partido.
